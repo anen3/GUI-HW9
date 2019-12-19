@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Droppable - Revert draggable position</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+  #draggable, #draggable2 { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+  .drop{ width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+  #droppable8{ width: 800px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#draggable" ).draggable({ revert: "valid" });
+    $( "#draggable2" ).draggable({ revert: "invalid" });
+ 
+    $( ".drop" ).droppable({
+      classes: {
+        "ui-droppable-active": "ui-state-active",
+        "ui-droppable-hover": "ui-state-hover"
+      },
+      drop: function( event, ui ) {
+        $( this )
+          .addClass( "ui-state-highlight" )
+          .find( "p" )
+            .html( "Dropped!" );
+      }
+    });
+  } );
+  </script>
+</head>
+<body>
+ <p id="demo"></p>
+<div id="draggable" class="ui-widget-content">
+  <p>I revert when I'm dropped</p>
+</div>
+ 
+<div id="draggable2" class="ui-widget-content">
+  <p>I revert when I'm not dropped</p>
+</div>
+ 
+<div id="droppable" class="ui-widget-header drop">
+  <p>Drop me here</p>
+</div>
+ 
+<div id="droppable2" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+<div id="droppable3" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+
+<div id="droppable4" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+
+<div id="droppable5" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+
+<div id="droppable6" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+
+<div id="droppable7" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+
+<div id="droppable8" class="ui-widget-header drop">
+<p>Drop me here</p>
+</div>
+
+
+<script src="JS/hw9.js"></script>
+  
+</body>
+</html>

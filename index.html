@@ -6,9 +6,15 @@
   <title>jQuery UI Droppable - Revert draggable position</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <style>
-  #draggable, #draggable2 { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
-  .drop{ width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
-  #droppable8{ width: 800px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+  .ui-widget-content { width: 100px; height: 100px; padding: 0.5em; left: 200px;   }
+  .board{ width: 150px; height: 150px; padding: 0.5em; position: absolute; margin: 10px; }
+  
+  #droppable8{ width: 900px; height: 150px; padding: 0.5em; top: 300px; margin: 10px; position: fixed; }
+   .letters {
+   position:absolute; 
+   z-index: 1;
+ }
+
   </style>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -16,7 +22,11 @@
   $( function() {
     $( "#draggable" ).draggable({ revert: "valid" });
     $( "#draggable2" ).draggable({ revert: "invalid" });
- 
+    $( "#draggable3" ).draggable({ revert: "invalid" });
+	$( "#draggable4" ).draggable({ revert: "invalid" });
+	$( "#draggable5" ).draggable({ revert: "invalid" });
+	$( "#draggable6" ).draggable({ revert: "invalid" });
+	$( "#draggable7" ).draggable({ revert: "invalid" });
     $( ".drop" ).droppable({
       classes: {
         "ui-droppable-active": "ui-state-active",
@@ -33,46 +43,69 @@
   </script>
 </head>
 <body>
-<section id="content">test</section>
- <p id="demo"></p>
-<div id="draggable" class="ui-widget-content">
-  <p>I revert when I'm dropped</p>
-</div>
- 
-<div id="draggable2" class="ui-widget-content">
-  <p>I revert when I'm not dropped</p>
-</div>
- 
-<div id="droppable" class="ui-widget-header drop">
-  <p>Drop me here</p>
-</div>
- 
-<div id="droppable2" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
-<div id="droppable3" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
+	
+		<section id="content">test</section>
+		 <p id="demo"></p>
+		 <div class="letters">
+		<div id="draggable" class="ui-widget-content">
+		  <p>I revert when I'm dropped</p>
+		</div>
+		 
+		<div id="draggable2" class="ui-widget-content">
+		  <p>I revert when I'm not dropped</p>
+		</div>
 
-<div id="droppable4" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
+		<div id="draggable3" class="ui-widget-content">
+		  <p>I revert when I'm not dropped</p>
+		</div>
 
-<div id="droppable5" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
+		<div id="draggable4" class="ui-widget-content">
+		  <p>I revert when I'm not dropped</p>
+		</div>
 
-<div id="droppable6" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
+		<div id="draggable5" class="ui-widget-content">
+		  <p>I revert when I'm not dropped</p>
+		</div>
 
-<div id="droppable7" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
+		<div id="draggable6" class="ui-widget-content">
+		  <p>I revert when I'm not dropped</p>
+		</div>
 
-<div id="droppable8" class="ui-widget-header drop">
-<p>Drop me here</p>
-</div>
+		<div id="draggable7" class="ui-widget-content">
+		  <p>I revert when I'm not dropped</p>
+		</div>
+	 </div>
+	 <div id="board">
+		<div id="droppable" class="ui-widget-header drop board">
+		  <p>Drop me here</p>
+		</div>
+		 
+		<div id="droppable2" class="ui-widget-header drop board">
+		<p>Drop me here</p>
+		</div>
+		<div id="droppable3" class="ui-widget-header drop board">
+		<p>Drop me here</p>
+		</div>
+
+		<div id="droppable4" class="ui-widget-header drop board">
+		<p>Drop me here</p>
+		</div>
+
+		<div id="droppable5" class="ui-widget-header drop board">
+		<p>Drop me here</p>
+		</div>
+
+		<div id="droppable6" class="ui-widget-header drop board">
+		<p>Drop me here</p>
+		</div>
+
+		<div id="droppable7" class="ui-widget-header drop board">
+		<p>Drop me here</p>
+		</div>
+	</div>
+	<div id="droppable8" class="ui-widget-header drop">
+	<p>Drop me here</p>
+	</div>
 
 <script	
 	  src="https://code.jquery.com/jquery-3.4.1.min.js"

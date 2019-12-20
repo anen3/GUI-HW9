@@ -56,13 +56,69 @@ var data = {"pieces": [
     });
 	
 	// function to space out the tile pieces
-	   $( ".ui-widget-content" ).each(function( index, element ) {
-    // element == this
-	var spacingFactor = 130;
-	var leftOffset = 20;
-	var topOffset = 20;
-	$( element ).css( "position", "fixed" );
-    $( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
-	$( element ).css( "top", String(pos.top + topOffset) + "px" );
-	$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
+   $(".ui-widget-content" ).each(function( index, element ) {
+		// element == this
+		var spacingFactor = 130;
+		var leftOffset = 30;
+		var topOffset = 50;
+		$( element ).css( "position", "fixed" );
+		$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
+		$( element ).css( "top", String(pos.top + topOffset) + "px" );
+		$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
     });
+	
+	/* function to place button below the rack */
+	$("#reset")
+	{
+		var topOffset = 200;
+		$("#reset").css("top", String(pos.top + topOffset) + "px");
+		$("#reset").css("left", topOffset + "px");
+		$("#reset").css("color", "red");
+	}
+	
+	document.getElementById("reset").addEventListener("click", displayDate);
+	function displayDate() {
+	document.getElementById("demo").innerHTML = Date();
+	$(".ui-widget-content" ).each(function( index, element ) {
+		// element == this
+		var spacingFactor = 130;
+		var leftOffset = 30;
+		var topOffset = 50;
+			for(i = 0; i < rackSize; i++)
+		{
+			pieceVals[i] = data.pieces[(Math.floor(Math.random()*26))].letter;
+
+		}
+		$( element ).css( "position", "fixed" );
+		$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
+		$( element ).css( "top", String(pos.top + topOffset) + "px" );
+		$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
+    });
+	}
+	
+	//set draggable property for the piece tiles, make the board tiles detect the piece tiles with img tag
+  $( function() {
+    $( "#draggable" ).draggable({ revert: "invalid" });
+    $( "#draggable2" ).draggable({ revert: "invalid" });
+    $( "#draggable3" ).draggable({ revert: "invalid" });
+	$( "#draggable4" ).draggable({ revert: "invalid" });
+	$( "#draggable5" ).draggable({ revert: "invalid" });
+	$( "#draggable6" ).draggable({ revert: "invalid" });
+	$( "#draggable7" ).draggable({ revert: "invalid" });
+    $( ".drop" ).droppable({
+      classes: {
+        "ui-droppable-active": "ui-state-active",
+        "ui-droppable-hover": "ui-state-hover"
+      },
+      drop: function( event, ui ) {
+        $( this )
+          .addClass( "ui-state-highlight" )
+          .find( "p" )
+            .html( "Dropped!" );
+      }
+    });
+	/* $( ".board").droppable({ 
+	drop: function() {alert( "dropped" );
+	}
+    }); */
+} );

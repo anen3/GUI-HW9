@@ -37,12 +37,14 @@ var data = {"pieces": [
 		
     document.getElementById('content').innerHTML = data.pieces[1].letter + ", left:" + data.pieces[1].amount;
 	//get the rackSize amount of random letters
-	for(i = 0; i < rackSize; i++)
+	function randomizeLetters() 
 	{
-		pieceVals[i] = data.pieces[(Math.floor(Math.random()*26))].letter;
-		console.log("have letter: " + pieceVals[i]);
+		for(i = 0; i < rackSize; i++)
+		{
+			pieceVals[i] = data.pieces[(Math.floor(Math.random()*27))].letter;
+			console.log("have letter: " + pieceVals[i]);
+		}
 	}
-	
 	var pos = $("#droppable8").position(); 
 	console.log(pos.left);
 	console.log("top is: " + String(pos.top));
@@ -56,16 +58,18 @@ var data = {"pieces": [
     });
 	
 	// function to space out the tile pieces
-   $(".ui-widget-content" ).each(function( index, element ) {
-		// element == this
-		var spacingFactor = 130;
-		var leftOffset = 30;
-		var topOffset = 50;
-		$( element ).css( "position", "fixed" );
-		$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
-		$( element ).css( "top", String(pos.top + topOffset) + "px" );
-		$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
-    });
+	function setPieces(){
+	   $(".ui-widget-content" ).each(function( index, element ) {
+			// element == this
+			var spacingFactor = 130;
+			var leftOffset = 30;
+			var topOffset = 50;
+			$( element ).css( "position", "absolute" );
+			$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
+			$( element ).css( "top", String(pos.top + topOffset) + "px" );
+			$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
+		});
+	}
 	
 	/* function to place button below the rack */
 	$("#reset")
@@ -76,24 +80,12 @@ var data = {"pieces": [
 		$("#reset").css("color", "red");
 	}
 	
-	document.getElementById("reset").addEventListener("click", displayDate);
-	function displayDate() {
-	document.getElementById("demo").innerHTML = Date();
-	$(".ui-widget-content" ).each(function( index, element ) {
-		// element == this
-		var spacingFactor = 130;
-		var leftOffset = 30;
-		var topOffset = 50;
-			for(i = 0; i < rackSize; i++)
-		{
-			pieceVals[i] = data.pieces[(Math.floor(Math.random()*26))].letter;
-
-		}
-		$( element ).css( "position", "fixed" );
-		$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
-		$( element ).css( "top", String(pos.top + topOffset) + "px" );
-		$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
-    });
+	document.getElementById("reset").addEventListener("click", startOver);
+	// return pieces back to the rack and get new pieces
+	function startOver() {
+		document.getElementById("demo").innerHTML = Date();
+		randomizeLetters();
+		setPieces();
 	}
 	
 	//set draggable property for the piece tiles, make the board tiles detect the piece tiles with img tag
@@ -122,3 +114,12 @@ var data = {"pieces": [
 	}
     }); */
 } );
+
+
+
+
+$(document).ready(function(){
+	randomizeLetters();
+	setPieces();
+
+});

@@ -1,6 +1,6 @@
 const rackSize = 7;
 var i;
-var rackContainer = [];
+var pieceVals = []; // the current set of letters
 
 var data = {"pieces": [
 			{"letter":"A", "value":1,  "amount":9},
@@ -39,13 +39,14 @@ var data = {"pieces": [
 	//get the rackSize amount of random letters
 	for(i = 0; i < rackSize; i++)
 	{
-		console.log(Math.floor(Math.random()*26));
-		
+		pieceVals[i] = data.pieces[(Math.floor(Math.random()*26))].letter;
+		console.log("have letter: " + pieceVals[i]);
 	}
 	
 	var pos = $("#droppable8").position(); 
 	console.log(pos.left);
 	console.log("top is: " + String(pos.top));
+	
 	 // function to space out the board spaces
 	   $( ".board" ).each(function( index, element ) {
     // element == this
@@ -54,7 +55,7 @@ var data = {"pieces": [
 	console.log(String(pos.left + spacingFactor * index) + "px");
     });
 	
-	// function to space out the pieces
+	// function to space out the tile pieces
 	   $( ".ui-widget-content" ).each(function( index, element ) {
     // element == this
 	var spacingFactor = 130;
@@ -63,4 +64,5 @@ var data = {"pieces": [
 	$( element ).css( "position", "fixed" );
     $( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
 	$( element ).css( "top", String(pos.top + topOffset) + "px" );
+	$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
     });

@@ -1,6 +1,11 @@
 const rackSize = 7;
-var i;
-var pieceVals = []; // the current set of letters
+
+function makeTile(id, letter) {
+  this.letter = letter;
+  this.id = id;
+  
+} 
+var tile = []; // the current set of letters ex. A, B, F ...
 
 var data = {"pieces": [
 			{"letter":"A", "value":1,  "amount":9},
@@ -34,44 +39,40 @@ var data = {"pieces": [
 		"creator":"Ramon Meza"
 		}
 		
-		
-    document.getElementById('content').innerHTML = data.pieces[1].letter + ", left:" + data.pieces[1].amount;
+
+    
 	//get the rackSize amount of random letters
+	//returns a random letter
 	function randomizeLetters() 
 	{
-		for(i = 0; i < rackSize; i++)
-		{
-			pieceVals[i] = data.pieces[(Math.floor(Math.random()*27))].letter;
-			console.log("have letter: " + pieceVals[i]);
-		}
+		var x = Math.floor(Math.random()*27);
+		return x;
 	}
 	var pos = $("#droppable8").position(); 
-	console.log(pos.left);
-	console.log("top is: " + String(pos.top));
-	
-	 // function to space out the board spaces
+	 // initial spacing of the board spaces
 	   $( ".board" ).each(function( index, element ) {
-    // element == this
-	var spacingFactor = 170;
-    $( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
-	console.log(String(pos.left + spacingFactor * index) + "px");
-    });
-	
-	// function to space out the tile pieces
+			// element == this
+			var spacingFactor = 170;
+			$( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
+			//console.log(String(pos.left + spacingFactor * index) + "px");
+			});
+			
+	// function to space out the tile pieces, and load the tile image 
 	function setPieces(){
 	   $(".ui-widget-content" ).each(function( index, element ) {
 			// element == this
 			var spacingFactor = 130;
 			var leftOffset = 30;
 			var topOffset = 50;
+			tile[index] = new makeTile(($(element).attr("id")), data.pieces[randomizeLetters()].letter );
 			$( element ).css( "position", "absolute" );
 			$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
 			$( element ).css( "top", String(pos.top + topOffset) + "px" );
-			$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + pieceVals[index] + ".jpg");
+			$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + tile[index].letter + ".jpg");
 		});
 	}
 	
-	/* function to place button below the rack */
+	/* move the reset button to a place below the rack */
 	$("#reset")
 	{
 		var topOffset = 200;
@@ -79,7 +80,7 @@ var data = {"pieces": [
 		$("#reset").css("left", topOffset + "px");
 		$("#reset").css("color", "red");
 	}
-	
+	//bind the button to a function startover
 	document.getElementById("reset").addEventListener("click", startOver);
 	// return pieces back to the rack and get new pieces
 	function startOver() {
@@ -89,7 +90,7 @@ var data = {"pieces": [
 	}
 	
 	//set draggable property for the piece tiles, make the board tiles detect the piece tiles with img tag
-  $( function() {
+$( function() {
     $( "#draggable" ).draggable({ revert: "invalid" });
     $( "#draggable2" ).draggable({ revert: "invalid" });
     $( "#draggable3" ).draggable({ revert: "invalid" });
@@ -107,14 +108,23 @@ var data = {"pieces": [
           .addClass( "ui-state-highlight" )
           .find( "p" )
             .html( "Dropped!" );
-      }
-    });
+      },
+    
 	/* $( ".board").droppable({ 
 	drop: function() {alert( "dropped" );
 	}
     }); */
-} );
+	/* get the id of draggable that was last dropped */
+	/* https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
+		drop: function(event, ui) {
+		var id = ui.draggable.attr("id");
+		document.getElementById('demo').innerHTML = id; 
+		document.getElementById('demo2').innerHTML = "the letter associated with the id: " + tile[tile.findIndex(tile => tile.id == id)].letter;
+		// trying to get the index of the the last draggable that dropped using findIndex https://stackoverflow.com/questions/12462318/find-a-value-in-an-array-of-objects-in-javascript
+	}
 
+});
+} );
 
 
 

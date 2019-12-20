@@ -7,24 +7,14 @@ xhr.onload = function() {                       // When readystate changes
   if(xhr.status === 200) {                      // If server status was ok
     var responseObject = JSON.parse(xhr.responseText); //JSON data from the server is stored in a variable called responseObject
 
-    // BUILD UP STRING WITH NEW CONTENT (could also use DOM manipulation)
-    var newContent = '';
-    for (var i = 0; i < responseObject.events.length; i++) { // Loop through object
-      newContent += '<div class="event">';
-      newContent += '<img src="' + responseObject.events[i].map + '" ';
-      newContent += 'alt="' + responseObject.events[i].location + '" />';
-      newContent += '<p><b>' + responseObject.events[i].location + '</b><br>';
-      newContent += responseObject.events[i].date + '</p>';
-      newContent += '</div>';
-    }
 
     // Update the page with the new content
-    document.getElementById('content').innerHTML = newContent;
+    document.getElementById('content').innerHTML = responseObject.pieces[1].letter + ", left:" + responseObject.pieces[1].amount;
 
   }
 };
 
-xhr.open('GET', 'resource/pieces.json', true);        // Prepare the request
+xhr.open('GET', 'pieces.json', true);        // Prepare the request
 xhr.send('');                                 // Send the request
 
 // When working locally in Firefox, you may see an error saying that the JSON is not well-formed.

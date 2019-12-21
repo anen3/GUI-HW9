@@ -37,10 +37,12 @@ const data = {"pieces": [
 		}
 		
 
-function makeTile(id, letter, value) {
+function makeTile(id, letter, value, droppedOn, previousDropped) {
   this.letter = letter;
   this.id = id;
   this.value = value;
+  this.droppedOn = droppedOn;
+  this.previousDropped = previousDropped;
 } 
 function makeBoard(id, letter){
 	this.letter = letter;
@@ -62,14 +64,14 @@ function makeBoard(id, letter){
 	}
 	var pos = $("#droppable8").position(); 
 	 // initial spacing of the board spaces
-	   $( ".board" ).each(function( index, element ) {
-			// element == this
-			var spacingFactor = 170;
-			$( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
-			if ( $( this ).is( "#droppable7" ) ) {
-			  return false;
-			}
-		});
+	$( ".board" ).each(function( index, element ) {
+		// element == this
+		var spacingFactor = 170;
+		$( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
+		if ( $( this ).is( "#droppable7" ) ) {
+		  return false;
+		}
+	});
 		// the tile underneath the board
 	/* $( ".drop" ).each(function( index, element ) {
 			// element == this
@@ -91,7 +93,7 @@ function makeBoard(id, letter){
 			var gotRandom = randomizeLetters();
 			var letter = data.pieces[gotRandom].letter;
 			var value = data.pieces[gotRandom].value;
-			tile[index] = new makeTile(($(element).attr("id")), letter, value);
+			tile[index] = new makeTile(($(element).attr("id")), letter, value, "droppable8", "droppable8");
 			$( element ).css( "position", "absolute" );
 			$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
 			$( element ).css( "top", String(pos.top + topOffset) + "px" );
@@ -117,9 +119,7 @@ function makeBoard(id, letter){
 		setPieces();
 		updateScore(0, 0);
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
-		$( ".ui-widget-content" ).draggable({
-		scope: "placeOnBoardOnly"
-		});
+		$('.board').droppable('option', 'disabled', false);
 	}
 	function updateScore(code, val) 
 	{
@@ -151,7 +151,7 @@ $( function() {
 	$( "#draggable6" ).draggable({ revert: "invalid" });
 	$( "#draggable7" ).draggable({ revert: "invalid" });
 	//initializing the scope of tiles and board and rack
-	$( ".ui-widget-content" ).draggable({
+	/* $( ".ui-widget-content" ).draggable({
 		scope: "placeOnBoardOnly"
 		});
 	$( "#droppable8" ).droppable({
@@ -159,7 +159,7 @@ $( function() {
 		});
 	$( ".board" ).droppable({
 	  scope: "placeOnBoardOnly"
-	});
+	}); */
 	//do not count trigger the drop event for droppable 8 for scoring reason
 	$("#droppable8").droppable({
 	 classes: {
@@ -170,15 +170,64 @@ $( function() {
 		{
 			
 			var id = ui.draggable.attr("id");
-			var x = tile.findIndex(tile => tile.id == id);
-			var letterLookup = tile[x].letter;
-			updateScore(-1, tile[x].value);
+			var index = tile.findIndex(tile => tile.id == id);
+			var letterLookup = tile[index].letter;
+			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
+			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
+			updateScore(-1, tile[index].value);
 			document.getElementById('demo6').innerHTML = "place score here: " + score;
-			$( "#"+ id ).draggable( "option", "scope", "placeOnBoardOnly" );
+			//$( "#"+ id ).draggable( "option", "scope", "placeOnBoardOnly" );
+			
+			
+			
+        var x  = tile[index].droppedOn;
+		//$('#' + x).droppable('option', 'disabled', true);
+		console.log("dropped onto:" + x);
+		console.log("previous is:" + tile[index].previousDropped);
+
+			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 	});
-	
-	
+	// accept classes: board and rack except for current board, or only board because the tile is on the rack
+	$('.ui-widget-content').draggable({
+    start: function() {
+		/* var x = tile[tile.findIndex(tile => tile.id == this.id) ].droppedOn;
+		console.log("picked up from:" + x);
+		tile[tile.findIndex(tile => tile.id == this.id) ].previousDropped = x;
+        if( x == "droppable8")
+			{console.log("the rack");}
+		else
+		{
+			
+			$('#' + x).droppable('option', 'disabled', true);
+		} */
+		//$( '#' + x).removeClass( "valid" )
+    },
+    stop: function() {
+		
+    }
+});
 	//underlapped droppable should be hidden under board tiles functions out and drop
     $( ".board" ).droppable({
 		classes: 
@@ -193,7 +242,7 @@ $( function() {
 			.addClass( "ui-state-highlight" )
 			.find( "p" )
 			.html( "Dropped!" )
-			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
+			
 			/* get the id of draggable that was last dropped */
 			/* https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
 			var id = ui.draggable.attr("id");
@@ -209,7 +258,39 @@ $( function() {
 			var letterLookup = tile[x].letter;
 			updateScore(1, tile[x].value);
 			document.getElementById('demo6').innerHTML = "place score here: " + score;
-			$( "#"+ id ).draggable( "option", "scope", "placeOnRackOnly" );
+			//$( "#"+ id ).draggable( "option", "scope", "placeOnRackOnly" );
+			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
+			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
+			
+			
+			
+			
+			
+			
+			
+			
+		var index  = tile.findIndex(tile => tile.id == id);
+        var x  = tile[index].droppedOn;
+		//$('#' + x).droppable('option', 'disabled', true);
+		console.log("dropped onto:" + x);
+		console.log("previous is:" + tile[index].previousDropped);
+		 if( x == "droppable8")
+			{}
+		else
+		{
+			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
+			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
+			tile[index].previousDropped = tile[index].droppedOn;
+		}
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 	});
 });

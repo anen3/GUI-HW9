@@ -10,9 +10,10 @@
   .board{ width: 150px; height: 150px; padding: 0.5em; position: absolute; margin: 10px; }
   .ui-widget-content { width: 90px; height: 90px; left: 200px;  }
   #droppable8{ width: 900px; height: 150px; padding: 0.5em; top: 300px; margin: 10px; position: relative; }
+  #droppable9{width: 900px; height: 150px; padding: 0.5em; position: absolute; margin: 10px; z-index = 3000}
    .letters {
    position:absolute; 
-   z-index: 1;
+   z-index: 2;
  }
  #reset {width: 100px; height: 50px; position: absolute;}
   #test {width: 100px; height: 100px; left: 1400px; top: 100px; position: absolute;}
@@ -51,37 +52,37 @@
 	 
 	 <!-- set of seven droppable board tiles -->
 	 <div id="board">
-		<div id="droppable" class="ui-widget-header drop board">
+		<div id="droppable" class="ui-widget-header board">
 		  <p>Drop me here</p>
 		</div>
 		 
-		<div id="droppable2" class="ui-widget-header drop board">
+		<div id="droppable2" class="ui-widget-header board">
 		<p>Drop me here</p>
 		</div>
-		<div id="droppable3" class="ui-widget-header drop board">
-		<p>Drop me here</p>
-		</div>
-
-		<div id="droppable4" class="ui-widget-header drop board">
+		<div id="droppable3" class="ui-widget-header board">
 		<p>Drop me here</p>
 		</div>
 
-		<div id="droppable5" class="ui-widget-header drop board">
+		<div id="droppable4" class="ui-widget-header board">
 		<p>Drop me here</p>
 		</div>
 
-		<div id="droppable6" class="ui-widget-header drop board">
+		<div id="droppable5" class="ui-widget-header board">
 		<p>Drop me here</p>
 		</div>
 
-		<div id="droppable7" class="ui-widget-header drop board">
+		<div id="droppable6" class="ui-widget-header board">
+		<p>Drop me here</p>
+		</div>
+
+		<div id="droppable7" class="ui-widget-header board">
 		<p>Drop me here</p>
 		</div>
 		
 	</div>
-	
+	<!-- <div id="droppable9" class="ui-widget-header drop"><p>Drop me here</p></div> -->
 	<!-- this droppable tile serves as the board rack -->
-	<div id="droppable8" class="ui-widget-header drop">
+	<div id="droppable8" class="ui-widget-header">
 	<p>Drop me here</p>
 	</div>
 	<button id="reset">Start Over</button>
@@ -93,7 +94,7 @@
 		 <p id="demo3">test:</p>
 		 <p id="demo4">test:</p>
 		 <p id="demo5">the drop target is:</p>
-		 <p id="demo5">place score here:</p>
+		 <p id="demo6">place score here:</p>
 		 </div>
 <script	
 	  src="https://code.jquery.com/jquery-3.4.1.min.js"

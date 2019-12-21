@@ -66,9 +66,21 @@ function makeBoard(id, letter){
 			// element == this
 			var spacingFactor = 170;
 			$( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
-			//console.log(String(pos.left + spacingFactor * index) + "px");
-			});
-			
+			if ( $( this ).is( "#droppable7" ) ) {
+			  return false;
+			}
+		});
+		// the tile underneath the board
+	/* $( ".drop" ).each(function( index, element ) {
+			// element == this
+			var spacingFactor = 170;
+			$(element).find("p").html("why is it not working");
+			var posTileEnd = $("#droppable7").position().left; 
+			$( element ).css( "zIndex", "-1");
+			$( element ).css( "width", String(posTileEnd + $("#droppable7").width()) + "px");
+		}); */
+	
+	
 	// function to space out the tile pieces, and load the tile image 
 	function setPieces(){
 	   $(".ui-widget-content" ).each(function( index, element ) {
@@ -94,6 +106,7 @@ function makeBoard(id, letter){
 		$("#reset").css("top", String(pos.top + topOffset) + "px");
 		$("#reset").css("left", topOffset + "px");
 		$("#reset").css("color", "red");
+		score = 0;
 	}
 	//bind the button to a function startover
 	document.getElementById("reset").addEventListener("click", startOver);
@@ -102,16 +115,29 @@ function makeBoard(id, letter){
 		document.getElementById("demo").innerHTML = Date();
 		randomizeLetters();
 		setPieces();
+		updateScore(0, 0);
+		document.getElementById("demo6").innerHTML = "place score here: " + score;
+		$( ".ui-widget-content" ).draggable({
+		scope: "placeOnBoardOnly"
+		});
 	}
-	function updateScore(decrease, val) 
+	function updateScore(code, val) 
 	{
-		if(decrease)
-		{
-			score = score - val;
-		}
-		else
-		{
-			score = score + val;
+		switch(code){
+			case -1:
+			{
+				score = score - val;
+			} 
+			break;
+			case 1:
+			{
+				score = score + val;
+			}
+			break;
+			case 0:
+			{
+				score = 0;
+			}
 		}
 	}
 	
@@ -124,6 +150,16 @@ $( function() {
 	$( "#draggable5" ).draggable({ revert: "invalid" });
 	$( "#draggable6" ).draggable({ revert: "invalid" });
 	$( "#draggable7" ).draggable({ revert: "invalid" });
+	//initializing the scope of tiles and board and rack
+	$( ".ui-widget-content" ).draggable({
+		scope: "placeOnBoardOnly"
+		});
+	$( "#droppable8" ).droppable({
+		  scope: "placeOnRackOnly"
+		});
+	$( ".board" ).droppable({
+	  scope: "placeOnBoardOnly"
+	});
 	//do not count trigger the drop event for droppable 8 for scoring reason
 	$("#droppable8").droppable({
 	 classes: {
@@ -132,17 +168,18 @@ $( function() {
       },
 	  drop: function( event, ui ) 
 		{
-			$( this )
+			
 			var id = ui.draggable.attr("id");
 			var x = tile.findIndex(tile => tile.id == id);
 			var letterLookup = tile[x].letter;
-			updateScore(true, tile[x].value);
-			document.getElementById('demo5').innerHTML = "place score here: " + score;
+			updateScore(-1, tile[x].value);
+			document.getElementById('demo6').innerHTML = "place score here: " + score;
+			$( "#"+ id ).draggable( "option", "scope", "placeOnBoardOnly" );
 		}
 	});
 	
 	
-	//board functions out and drop
+	//underlapped droppable should be hidden under board tiles functions out and drop
     $( ".board" ).droppable({
 		classes: 
 		{
@@ -170,8 +207,9 @@ $( function() {
 			var id = ui.draggable.attr("id");
 			var x = tile.findIndex(tile => tile.id == id);
 			var letterLookup = tile[x].letter;
-			updateScore(false, tile[x].value);
-			document.getElementById('demo5').innerHTML = "place score here: " + score;
+			updateScore(1, tile[x].value);
+			document.getElementById('demo6').innerHTML = "place score here: " + score;
+			$( "#"+ id ).draggable( "option", "scope", "placeOnRackOnly" );
 		}
 	});
 });

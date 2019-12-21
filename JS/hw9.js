@@ -1,13 +1,10 @@
 const rackSize = 7;
+var score = 0;
+var board = []
 
-function makeTile(id, letter) {
-  this.letter = letter;
-  this.id = id;
-  
-} 
 var tile = []; // the current set of letters ex. A, B, F ...
 
-var data = {"pieces": [
+const data = {"pieces": [
 			{"letter":"A", "value":1,  "amount":9},
 			{"letter":"B", "value":3,  "amount":2},
 			{"letter":"C", "value":3,  "amount":2},
@@ -40,6 +37,21 @@ var data = {"pieces": [
 		}
 		
 
+function makeTile(id, letter, value) {
+  this.letter = letter;
+  this.id = id;
+  this.value = value;
+} 
+function makeBoard(id, letter){
+	this.letter = letter;
+	this.id = id;
+}
+
+//initialize board
+//for(int i = 0; i < rackSize; i++)
+
+
+
     
 	//get the rackSize amount of random letters
 	//returns a random letter
@@ -64,11 +76,14 @@ var data = {"pieces": [
 			var spacingFactor = 130;
 			var leftOffset = 30;
 			var topOffset = 50;
-			tile[index] = new makeTile(($(element).attr("id")), data.pieces[randomizeLetters()].letter );
+			var gotRandom = randomizeLetters();
+			var letter = data.pieces[gotRandom].letter;
+			var value = data.pieces[gotRandom].value;
+			tile[index] = new makeTile(($(element).attr("id")), letter, value);
 			$( element ).css( "position", "absolute" );
 			$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
 			$( element ).css( "top", String(pos.top + topOffset) + "px" );
-			$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + tile[index].letter + ".jpg");
+			$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + letter + ".jpg");
 		});
 	}
 	
@@ -88,6 +103,17 @@ var data = {"pieces": [
 		randomizeLetters();
 		setPieces();
 	}
+	function updateScore(decrease, val) 
+	{
+		if(decrease)
+		{
+			score = score - val;
+		}
+		else
+		{
+			score = score + val;
+		}
+	}
 	
 	//set draggable property for the piece tiles, make the board tiles detect the piece tiles with img tag
 $( function() {
@@ -98,33 +124,57 @@ $( function() {
 	$( "#draggable5" ).draggable({ revert: "invalid" });
 	$( "#draggable6" ).draggable({ revert: "invalid" });
 	$( "#draggable7" ).draggable({ revert: "invalid" });
-    $( ".drop" ).droppable({
-      classes: {
+	//do not count trigger the drop event for droppable 8 for scoring reason
+	$("#droppable8").droppable({
+	 classes: {
         "ui-droppable-active": "ui-state-active",
         "ui-droppable-hover": "ui-state-hover"
       },
-      drop: function( event, ui ) {
-        $( this )
-          .addClass( "ui-state-highlight" )
-          .find( "p" )
-            .html( "Dropped!" );
-      },
-    
-	/* $( ".board").droppable({ 
-	drop: function() {alert( "dropped" );
-	}
-    }); */
-	/* get the id of draggable that was last dropped */
-	/* https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
-		drop: function(event, ui) {
-		var id = ui.draggable.attr("id");
-		document.getElementById('demo').innerHTML = id; 
-		document.getElementById('demo2').innerHTML = "the letter associated with the id: " + tile[tile.findIndex(tile => tile.id == id)].letter;
-		// trying to get the index of the the last draggable that dropped using findIndex https://stackoverflow.com/questions/12462318/find-a-value-in-an-array-of-objects-in-javascript
-	}
-
+	  drop: function( event, ui ) 
+		{
+			$( this )
+			var id = ui.draggable.attr("id");
+			var x = tile.findIndex(tile => tile.id == id);
+			var letterLookup = tile[x].letter;
+			updateScore(true, tile[x].value);
+			document.getElementById('demo5').innerHTML = "place score here: " + score;
+		}
+	});
+	
+	
+	//board functions out and drop
+    $( ".board" ).droppable({
+		classes: 
+		{
+			"ui-droppable-active": "ui-state-active",
+			"ui-droppable-hover": "ui-state-hover"
+		},
+	  //jquery ui drop, not the css class
+		drop: function( event, ui ) 
+		{
+			$( this )
+			.addClass( "ui-state-highlight" )
+			.find( "p" )
+			.html( "Dropped!" )
+			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
+			/* get the id of draggable that was last dropped */
+			/* https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
+			var id = ui.draggable.attr("id");
+			var letterLookup = tile[tile.findIndex(tile => tile.id == id)].letter;
+			//updateScore(false, data[data.findIndex(data => data.pieces == letterLookup)].value);
+			document.getElementById('demo').innerHTML = id; 
+			document.getElementById('demo2').innerHTML = "the letter associated with the id: " + letterLookup;
+			// trying to get the index of the the last draggable that dropped using findIndex https://stackoverflow.com/questions/12462318/find-a-value-in-an-array-of-objects-in-javascript
+			document.getElementById('demo3').innerHTML ="what is this" +  ui.helper.attr("id");
+			document.getElementById('demo4').innerHTML = "test of position top: " + ui.position.top;
+			var id = ui.draggable.attr("id");
+			var x = tile.findIndex(tile => tile.id == id);
+			var letterLookup = tile[x].letter;
+			updateScore(false, tile[x].value);
+			document.getElementById('demo5').innerHTML = "place score here: " + score;
+		}
+	});
 });
-} );
 
 
 

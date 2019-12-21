@@ -59,7 +59,7 @@ function makeBoard(id, letter){
 	//returns a random letter
 	function randomizeLetters() 
 	{
-		var x = Math.floor(Math.random()*27);
+		var x = Math.floor(Math.random()*26);
 		return x;
 	}
 	var pos = $("#droppable8").position(); 
@@ -174,8 +174,8 @@ $( function() {
 			var letterLookup = tile[index].letter;
 			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
-			updateScore(-1, tile[index].value);
-			document.getElementById('demo6').innerHTML = "place score here: " + score;
+			
+			
 			//$( "#"+ id ).draggable( "option", "scope", "placeOnBoardOnly" );
 			
 			
@@ -186,11 +186,20 @@ $( function() {
 		console.log("previous is:" + tile[index].previousDropped);
 
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
+			
 
+			if(tile[index].previousDropped == "droppable8")
+			{
+				//moving a tile originally on the rack to another spot on the rack
+			}
+			else
+			{
+				updateScore(-1, tile[index].value);
+			}
+			tile[index].previousDropped = tile[index].droppedOn;
+			document.getElementById('demo6').innerHTML = "place score here: " + score;
 			
-			
-			
-			
+
 			
 			
 			
@@ -254,43 +263,38 @@ $( function() {
 			document.getElementById('demo3').innerHTML ="what is this" +  ui.helper.attr("id");
 			document.getElementById('demo4').innerHTML = "test of position top: " + ui.position.top;
 			var id = ui.draggable.attr("id");
-			var x = tile.findIndex(tile => tile.id == id);
-			var letterLookup = tile[x].letter;
-			updateScore(1, tile[x].value);
-			document.getElementById('demo6').innerHTML = "place score here: " + score;
+			var index = tile.findIndex(tile => tile.id == id);
+			var letterLookup = tile[index].letter;
+			
+			
 			//$( "#"+ id ).draggable( "option", "scope", "placeOnRackOnly" );
 			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
 			
-			
-			
-			
-			
-			
-			
-			
-		var index  = tile.findIndex(tile => tile.id == id);
+		
         var x  = tile[index].droppedOn;
 		//$('#' + x).droppable('option', 'disabled', true);
 		console.log("dropped onto:" + x);
 		console.log("previous is:" + tile[index].previousDropped);
-		 if( x == "droppable8")
-			{}
-		else
-		{
+	
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
 			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
-			tile[index].previousDropped = tile[index].droppedOn;
-		}
 			
+			if(tile[index].previousDropped == "droppable8")
+			{
+				updateScore(1, tile[index].value);
+			}
+			else
+			{
+
+
+			}
+	
+			document.getElementById('demo6').innerHTML = "place score here: " + score;
+	tile[index].previousDropped = tile[index].droppedOn;	
+
 			
-			
-			
-			
-			
-			
-			
-			
+
 		}
 	});
 });

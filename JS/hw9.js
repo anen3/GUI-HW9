@@ -1,7 +1,13 @@
+/*Alex Nguyen
+alex_nguyen@student.uml.edu
+UMass Lowell COMP4610 GUI Programming I
+Purpose of this webpage: implementing part of the scrabble game using jquery ui draggable and droppable*/
+
+
 const rackSize = 7;
 var score = 0;
 var board = []
-
+var doubleFlag;
 var tile = []; // the current set of letters ex. A, B, F ...
 
 const data = {"pieces": [
@@ -68,9 +74,25 @@ function makeBoard(id, letter){
 		// element == this
 		var spacingFactor = 170;
 		$( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
-		if ( $( this ).is( "#droppable7" ) ) {
-		  return false;
+	if( $( this ).is(  "#droppable5" ) ) {
+			$(element).attr("src","resource/Scrabble_Tiles/double-letter-score.png");
 		}
+		else if ( $( this ).is( "#droppable" ) ) {
+			$(element).attr("src","resource/Scrabble_Tiles/double-word-score.png");
+		}
+		else if ( $( this ).is( "#droppable7" ) ) {
+			$(element).attr("src","resource/Scrabble_Tiles/double-letter-score.png");
+		}
+		else 
+		{
+			$(element).attr("src","resource/Scrabble_Tiles/regular-board.png");
+		}
+		// stop spacing elements here so the rack does not get affected?
+		
+		
+		
+		
+		
 	});
 		// the tile underneath the board
 	/* $( ".drop" ).each(function( index, element ) {
@@ -110,8 +132,18 @@ function makeBoard(id, letter){
 		$("#reset").css("color", "red");
 		score = 0;
 	}
+	/* move the reset button to a place beside reset button */
+	$("#submit")
+	{
+		var topOffset = 200;
+		$("#submit").css("top", String(pos.top + topOffset) + "px");
+		$("#submit").css("left", topOffset + 100 + "px");
+		$("#submit").css("color", "red");
+		score = 0;
+	}
 	//bind the button to a function startover
 	document.getElementById("reset").addEventListener("click", startOver);
+	document.getElementById("submit").addEventListener("click", pressedSubmit);
 	// return pieces back to the rack and get new pieces
 	function startOver() {
 		document.getElementById("demo").innerHTML = Date();
@@ -120,26 +152,21 @@ function makeBoard(id, letter){
 		updateScore(0, 0);
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
 		$('.board').droppable('option', 'disabled', false);
-	}
-	function updateScore(code, val) 
-	{
-		switch(code){
-			case -1:
-			{
-				score = score - val;
-			} 
-			break;
-			case 1:
-			{
-				score = score + val;
-			}
-			break;
-			case 0:
-			{
-				score = 0;
-			}
+		var index;
+		for(index = 0; index < tile.length; index++)
+		{
+			tile[index].previousDropped = "droppable8";
 		}
 	}
+	function pressedSubmit() {
+		document.getElementById("demo").innerHTML = Date();
+		randomizeLetters();
+		setPieces();
+		updateScore(0, 0);
+		document.getElementById("demo6").innerHTML = "place score here: " + score;
+		$('.board').droppable('option', 'disabled', false);
+	}
+	
 	
 	//set draggable property for the piece tiles, make the board tiles detect the piece tiles with img tag
 $( function() {
@@ -194,7 +221,7 @@ $( function() {
 			}
 			else
 			{
-				updateScore(-1, tile[index].value);
+				movedFromTiletoRack(index, tile[index].previousDropped);
 			}
 			tile[index].previousDropped = tile[index].droppedOn;
 			document.getElementById('demo6').innerHTML = "place score here: " + score;
@@ -280,25 +307,252 @@ $( function() {
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
 			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
 			
+			//moved from rack to tile
+			console.log("UUUUUU we get here");
 			if(tile[index].previousDropped == "droppable8")
 			{
-				updateScore(1, tile[index].value);
+				console.log("why we get here");
+				movedFromRacktoTile(index, tile[index].droppedOn );
+				
 			}
+			// moved from one board slot to another
 			else
 			{
-
-
+				console.log("maybe we get here");
+				movedtoAnotherBoardSlot(index, tile[index].previousDropped, tile[index].droppedOn );
 			}
 	
 			document.getElementById('demo6').innerHTML = "place score here: " + score;
-	tile[index].previousDropped = tile[index].droppedOn;	
+			tile[index].previousDropped = tile[index].droppedOn;	
 
 			
 
 		}
 	});
 });
+function updateScore(code, val) 
+{
+	switch(code){
+		case -1:
+		{
+			console.log("yo");
+			// moved from board to board
+			if(doubleFlag == -1)
+			{
+				console.log("hellO");
+				score = score 
+				doubleFlag = 0;
+				return;
+			}
+			score = score - val;
+		} 
+		break;
+		case 1:
+		{
+			score = score + val;
+			if(doubleFlag)
+			{
+				score = score *2;
+				doubleFlag = 0;
+			}
+			
+		}
+		break;
+		case 0:
+		{
+			score = 0;
+		}
+	}
+}
+function updateScoreRackPrevious(code, val) 
+{
+	score = val + score;
+}
+function updateScoreBoardPrevious(code, val) 
+{
+	score =  score - val * 2;
+	
+}
+function movedFromTiletoRack(index, previous)
+{
+	switch(previous)
+		{
+			case "droppable": 
+			{
+				// moved from the double word score tile to another tile i think it works
+				doubleFlag = -1;
+				updateScoreBoardPrevious(-1, tile[index].value);
+				console.log("did we get here");
+				
+			}
+			break;
+			case "droppable5":
+			{
+				//updateScoreBoardPrevious(-1,   tile[index].value/2);
+				score = score - 2*tile[index].value;
 
+				
+			}
+			break;
+			case "droppable7":
+			{
+				// moved from the double letter score tile to a tile (regular or special)?
+				//updateScoreBoardPrevious(-1,   tile[index].value/2);
+				score = score - 2*tile[index].value;
+			}
+			break;
+			default:
+			{
+				//move to rack from a  regular slot 
+				score = score - tile[index].value;
+				
+			}	
+		}
+	
+}
+
+
+function movedtoAnotherBoardSlot(index, previous, newlyDropped)
+{
+	switch(previous)
+		{
+			case "droppable": 
+			{
+				// moved from the double word score tile to another tile i think it works
+				doubleFlag = -1;
+				updateScoreBoardPrevious(-1, tile[index].value);
+				console.log("did we get here");
+				switch(newlyDropped)
+				{
+					case "droppable7":
+					{
+						score = score + tile[index].value;
+					}
+					break;
+					case "droppable7":
+					{
+						
+					}
+					break;
+					default:
+					{
+						// moved to a regular tile
+						//score = score - tile[index].value;
+					}
+				}
+			}
+			break;
+			case "droppable5":
+			{
+				//updateScoreBoardPrevious(-1,   tile[index].value/2);
+				score = score - tile[index].value;
+				switch(newlyDropped)
+				{
+					case "droppable7":
+					{
+						score = score + tile[index].value;
+					}
+					break;
+					case "droppable":
+					{
+						
+					}
+					break;
+					default:
+					{
+						// moved to a regular tile
+						//score = score - tile[index].value;
+					}
+				}
+
+				
+			}
+			break;
+			case "droppable7":
+			{
+				// moved from the double letter score tile to a tile (regular or special)?
+				switch(newlyDropped)
+				{
+					//moved to another double letter score so add the bonus back in
+					case "droppable5":
+					{
+						
+					}
+					break;
+					case "droppable":
+					{
+						
+					}
+					break;
+					default:
+					{
+						// moved to a regular tile
+						score = score - tile[index].value;
+					}
+				}
+			}
+			break;
+			default:
+			{
+				//move to a regular slot from a double word/letter tile or a regular tile 
+				switch(newlyDropped)
+				{
+					case "droppable7":
+					{
+						score = score + tile[index].value;
+					}
+					break;
+					case "droppable":
+					{
+						
+					}
+					break;
+					case "droppable5":
+					{
+						score = score + tile[index].value;
+					}
+					break;
+					default:
+					{
+						// moved to a regular tile
+						
+					}
+				}
+			}	
+		}
+}
+//add up the score
+function movedFromRacktoTile(index, newlyDropped)
+ {
+		switch(newlyDropped)
+			{
+				// moved to the double word score
+				case "droppable": 
+				{
+					score = score + tile[index].value;
+					score = score + score;
+				}
+				break;
+				case "droppable5":
+				{
+					score = score + 2 * tile[index].value;
+				}
+				break;
+				case "droppable7":
+				{
+					score = score + 2 * tile[index].value;
+				}
+				break;
+				default:
+				{
+					updateScoreRackPrevious(1,  tile[index].value);
+				}
+				
+			}	
+
+	
+	
+}
 
 
 $(document).ready(function(){

@@ -1,3 +1,7 @@
+<!-- Alex Nguyen
+alex_nguyen@student.uml.edu
+UMass Lowell COMP4610 GUI Programming I
+Purpose of this webpage: implementing part of the scrabble game using jquery ui draggable and droppable -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,6 +20,7 @@
    z-index: 2;
  }
  #reset {width: 100px; height: 50px; position: absolute;}
+  #submit {width: 100px; height: 50px; position: absolute;}
   #test {width: 100px; height: 100px; left: 1400px; top: 100px; position: absolute;}
   </style>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -31,7 +36,7 @@
 		</img>
 		 
 		<img id="draggable2" class="ui-widget-content">
-		  <p>I revert when I'm not dropped</p>
+
 		</img>
 
 		<img id="draggable3" class="ui-widget-content">
@@ -52,40 +57,40 @@
 	 
 	 <!-- set of seven droppable board tiles -->
 	 <div id="board">
-		<div id="droppable" class="ui-widget-header board valid">
-		  <p>Drop me here</p>
-		</div>
+		<img  id="droppable" class="ui-widget-header board valid">
+
+		</img>
 		 
-		<div id="droppable2" class="ui-widget-header board valid">
-		<p>Drop me here</p>
-		</div>
-		<div id="droppable3" class="ui-widget-header board valid">
-		<p>Drop me here</p>
-		</div>
+		<img id="droppable2" class="ui-widget-header board valid">
 
-		<div id="droppable4" class="ui-widget-header board valid">
-		<p>Drop me here</p>
 		</div>
+		<img  id="droppable3" class="ui-widget-header board valid">
 
-		<div id="droppable5" class="ui-widget-header board valid">
-		<p>Drop me here</p>
-		</div>
+		</img>
 
-		<div id="droppable6" class="ui-widget-header board valid">
-		<p>Drop me here</p>
-		</div>
+		<img  id="droppable4" class="ui-widget-header board valid">
 
-		<div id="droppable7" class="ui-widget-header board valid">
-		<p>Drop me here</p>
-		</div>
+		</img>
+
+		<img  id="droppable5" class="ui-widget-header board valid">
+
+		</img>
+
+		<img  id="droppable6" class="ui-widget-header board valid">
+
+		</img>
+
+		<img  id="droppable7" class="ui-widget-header board valid">
+
+		</img>
 		
 	</div>
 	<!-- <div id="droppable9" class="ui-widget-header drop"><p>Drop me here</p></div> -->
 	<!-- this droppable tile serves as the board rack -->
 	<div id="droppable8" class="ui-widget-header valid">
-	<p>Drop me here</p>
 	</div>
 	<button id="reset">Start Over</button>
+	<button id="submit">Submit Word</button>
 </div> 
 <!-- end wrapper -->
 	<div id="test">

@@ -6,10 +6,12 @@ Purpose of this webpage: implementing part of the scrabble game using jquery ui 
 
 const rackSize = 7;
 var score = 0;
-var board = []
+var amountArr = [];
+var refreshAmountArr = [];
 var wordFlag;
 var tile = []; // the current set of letters ex. A, B, F ...
-
+var totalScore = 0;
+var testingAmt;
 const data = {"pieces": [
 			{"letter":"A", "value":1,  "amount":9},
 			{"letter":"B", "value":3,  "amount":2},
@@ -41,8 +43,12 @@ const data = {"pieces": [
 		],
 		"creator":"Ramon Meza"
 		}
-		
-
+	for(var i = 0; i < 26; i++)
+	{
+		amountArr[i] = data.pieces[i].amount;
+		//testingAmt = testingAmt + " " +  amountArr[i];
+	}		
+	
 function makeTile(id, letter, value, droppedOn, previousDropped) {
   this.letter = letter;
   this.id = id;
@@ -50,10 +56,7 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
   this.droppedOn = droppedOn;
   this.previousDropped = previousDropped;
 } 
-function makeBoard(id, letter){
-	this.letter = letter;
-	this.id = id;
-}
+
 
 //initialize board
 //for(int i = 0; i < rackSize; i++)
@@ -66,8 +69,14 @@ function makeBoard(id, letter){
 	function randomizeLetters() 
 	{
 		var x = Math.floor(Math.random()*26);
+		if(amountArr[x] == 0)
+		{
+			randomizeLetters();
+		}
+		amountArr[x] = amountArr[x] - 1;
 		return x;
 	}
+	//get top of tile rack for spacing of board pieces
 	var pos = $("#droppable8").position(); 
 	 // initial spacing of the board spaces
 	$( ".board" ).each(function( index, element ) {
@@ -132,6 +141,7 @@ function makeBoard(id, letter){
 		$("#reset").css("left", topOffset + "px");
 		$("#reset").css("color", "red");
 		score = 0;
+		totalScore = 0;
 		wordFlag = 0;
 	}
 	/* move the reset button to a place beside reset button */
@@ -141,8 +151,6 @@ function makeBoard(id, letter){
 		$("#submit").css("top", String(pos.top + topOffset) + "px");
 		$("#submit").css("left", topOffset + 100 + "px");
 		$("#submit").css("color", "red");
-		score = 0;
-		wordFlag = 0;
 	}
 	//bind the button to a function startover
 	document.getElementById("reset").addEventListener("click", startOver);
@@ -150,7 +158,6 @@ function makeBoard(id, letter){
 	// return pieces back to the rack and get new pieces
 	function startOver() {
 		document.getElementById("demo").innerHTML = Date();
-		randomizeLetters();
 		setPieces();
 		resetScore();
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
@@ -163,11 +170,38 @@ function makeBoard(id, letter){
 	}
 	function pressedSubmit() {
 		document.getElementById("demo").innerHTML = Date();
-		randomizeLetters();
-		setPieces();
-		resetScore();
+		
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
 		$('.board').droppable('option', 'disabled', false);
+		
+		for(var i = 0; i < rackSize; i++)
+		{
+			if(tile[i].droppedOn != "droppable8")
+			{
+				var gotRandom = randomizeLetters();
+				var letter = data.pieces[gotRandom].letter;
+				$("#" + tile[i].id).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + letter + ".jpg");
+			}
+		}
+		 $(".ui-widget-content" ).each(function( index, element ) {
+			// element == this
+			var spacingFactor = 130;
+			var leftOffset = 30;
+			var topOffset = 50;
+			$( element ).css( "position", "absolute" );
+			$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
+			$( element ).css( "top", String(pos.top + topOffset) + "px" );
+			});
+
+		totalScore = score;
+		document.getElementById("demo6").innerHTML = "Total Score is: " + totalScore;
+		wordFlag = 0;
+		for(var index = 0; index < tile.length; index++)
+		{
+			tile[index].previousDropped = "droppable8";
+			tile[index].droppedOn = "droppable8";
+		}
+	
 	}
 	
 	
@@ -560,7 +594,6 @@ function wordFlagCheckEnd()
 }
 
 $(document).ready(function(){
-	randomizeLetters();
 	setPieces();
 
 });

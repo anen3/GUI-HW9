@@ -1,0 +1,59 @@
+Implemented all the basic and additional functionality as listed in the rubric. 
+No extra credit is completed. 
+
+letter tiles in the player’s “hand” are selected randomly from a data structure with 
+	the proper distribution of the letter:
+	Stored the data that holds the amounts remaining of each letter in array named amountArr.
+	The function setPieces will assing a random letter to a tile using function randomizeLetters.
+	randomizeLetters will check amountArr if the random letter at that index is available,
+	if not, the function will retrieve a new one recursively.
+	Function setpieces will load the image file of the corresponding letter. 
+	The button submit selects a new random hand when triggered by calling setPieces.
+
+
+letter tiles can be dragged-and-dropped onto target Scrabble squares: used the following code: $( "#draggable" ).draggable({ revert: "invalid" });
+	letter tiles can be dragged and dropped from one board slot to another.
+	letter tiles can be dragged to and from the rack and board slots.
+	tiles will be prevented from being dropped around on the same boardslot.
+	and only one tile can occupy a board slot. The following code will enable the previous droppable 
+	and disable the current droppable.
+		$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
+		$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
+	example of boardslot: #droppable
+ 
+ program identifies which letter tile is dropped onto which Scrabble square
+	 used this code from jquery ui droppable documentation to identify the letter tile:id = ui.draggable.attr("id");
+	 tile array will also keep track of of the tile's current and previous drop target
+ 
+ Board includes bonus squares. Their images are added at beginning of the program
+ 
+ Score is tallied correctly, including consideration of bonus square multipliers.
+	Bonus multipliers and scores are tallied correctly.
+	Functions movedFromRacktoTile, movedtoAnotherBoardSlot, movedFromTiletoRack 
+	handle the scoring. function wordFlagCheckBegins and wordFlagCheckEnd() uses wordFlag 
+	to factor in the double word bonus.
+	For example, a tile moves from the rack to a regular board tile. wordFlagCheckBegins will check 
+	if the bonus tile is already dropped. if yes remove, the bonus add in the tile that was just added, 
+	and call wordFlagCheckEnd to apply the bonus to the new score. 
+
+	example of double letter bonus being applied in a switch statement:
+			default:
+			{
+				//move to a regular slot from a double word/letter tile or a regular tile 
+				switch(newlyDropped)
+				{
+					case "droppable7":
+					{
+						wordFlagCheckBegin();
+						score = score + tile[index].value;
+						wordFlagCheckEnd();
+					}
+					
+The board is cleared after each round so that a new word can be played:
+	board is cleared upon triggering reset button.
+	submit button will replace used tiles with available ones, and keep unused ones
+	
+After playing a word, only the number of letter tiles needed to bring the player’s “hand” back to 7 tiles are selected.
+	randomized function works on tiles that have not been used.
+
+Score is kept for multiple words: stored in totalScore.

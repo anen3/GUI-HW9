@@ -231,6 +231,7 @@ $( function() {
 			var letterLookup = tile[index].letter;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
 			var x  = tile[index].droppedOn;
+			//enable or disable certain dropped element or a class of elements https://stackoverflow.com/questions/11066497/jquery-ui-drag-droppable-with-multiple-scopes
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
 			if(tile[index].previousDropped == "droppable8")
 			{
@@ -244,7 +245,7 @@ $( function() {
 			document.getElementById('demo6').innerHTML = "Current score is: " + score;
 		}
 	});
-	//underlapped droppable should be hidden under board tiles functions out and drop
+
 	//droppable code following from the tutorial: https://jqueryui.com/droppable/#revert*/
     $( ".board" ).droppable({
 		classes: 
@@ -267,8 +268,8 @@ $( function() {
 			var letterLookup = tile[index].letter;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
 			var x  = tile[index].droppedOn;
-			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
-			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
+			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false); //enable the previous droppable
+			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true); //disable the current droppable
 			
 			//moved from rack to tile
 			if(tile[index].previousDropped == "droppable8")

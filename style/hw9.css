@@ -1,0 +1,52 @@
+.board
+{ 
+width: 150px; 
+height: 150px; 
+padding: 0.5em; 
+position: absolute; 
+margin: 10px; 
+}
+.ui-widget-content 
+{ 
+	width: 90px; height: 90px; left: 200px;  }
+#droppable8
+{ 
+	width: 900px; 
+	height: 150px; 
+	padding: 0.5em; 
+	top: 300px; 
+	margin: 10px;
+	position: relative; 
+}
+#droppable9{
+	width: 900px; 
+	height: 150px; 
+	padding: 0.5em; 
+	position: absolute; 
+	margin: 10px; 
+	z-index: 3;
+	}
+.letters 
+{
+	position:absolute; 
+	z-index: 2;
+}
+#reset {
+	width: 100px; 
+	height: 50px; 
+	position: absolute;
+}
+#submit 
+{
+	width: 100px; 
+	height: 50px; 
+	position: absolute;
+}
+#test 
+{
+	width: 100px; 
+	height: 100px; 
+	left: 1400px; 
+	top: 100px; 
+	position: absolute;
+}

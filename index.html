@@ -9,9 +9,9 @@ Purpose of this webpage: implementing part of the scrabble game using jquery ui 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jQuery UI Droppable - Revert draggable position</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  
   <style>
   .board{ width: 150px; height: 150px; padding: 0.5em; position: absolute; margin: 10px; }
+  /*styling of draggable used https://jqueryui.com/droppable/#revert*/
   .ui-widget-content { width: 90px; height: 90px; left: 200px;  }
   #droppable8{ width: 900px; height: 150px; padding: 0.5em; top: 300px; margin: 10px; position: relative; }
   #droppable9{width: 900px; height: 150px; padding: 0.5em; position: absolute; margin: 10px; z-index = 3000}
@@ -32,77 +32,36 @@ Purpose of this webpage: implementing part of the scrabble game using jquery ui 
  <div id="wrapper">
 		 <!-- set of seven draggable letter tiles -->
 	 <div class="letters">
-		<img id="draggable" class="ui-widget-content">
-		</img>
-		 
-		<img id="draggable2" class="ui-widget-content">
-
-		</img>
-
-		<img id="draggable3" class="ui-widget-content">
-		 </img>
-
-		<img id="draggable4" class="ui-widget-content">
-		  </img>
-
-		<img id="draggable5" class="ui-widget-content">
-		  </img>
-
-		<img id="draggable6" class="ui-widget-content">
-		  </img>
-
-		<img id="draggable7" class="ui-widget-content">
-		  </img>
+		<img id="draggable" class="ui-widget-content"></img>
+		<img id="draggable2" class="ui-widget-content"></img>
+		<img id="draggable3" class="ui-widget-content"></img>
+		<img id="draggable4" class="ui-widget-content"></img>
+		<img id="draggable5" class="ui-widget-content"></img>
+		<img id="draggable6" class="ui-widget-content"></img>
+		<img id="draggable7" class="ui-widget-content"></img>
 	 </div>
 	 
 	 <!-- set of seven droppable board tiles -->
 	 <div id="board">
-		<img  id="droppable" class="ui-widget-header board valid">
-
-		</img>
-		 
-		<img id="droppable2" class="ui-widget-header board valid">
-
-		</div>
-		<img  id="droppable3" class="ui-widget-header board valid">
-
-		</img>
-
-		<img  id="droppable4" class="ui-widget-header board valid">
-
-		</img>
-
-		<img  id="droppable5" class="ui-widget-header board valid">
-
-		</img>
-
-		<img  id="droppable6" class="ui-widget-header board valid">
-
-		</img>
-
-		<img  id="droppable7" class="ui-widget-header board valid">
-
-		</img>
-		
-	</div>
+		<img  id="droppable" class="ui-widget-header board valid"></img>
+		<img  id="droppable2" class="ui-widget-header board valid"></div>
+		<img  id="droppable3" class="ui-widget-header board valid"></img>
+		<img  id="droppable4" class="ui-widget-header board valid"></img>
+		<img  id="droppable5" class="ui-widget-header board valid"></img>
+		<img  id="droppable6" class="ui-widget-header board valid"></img>
+		<img  id="droppable7" class="ui-widget-header board valid"></img>
+	</div> 
+	<!-- end wrapper does not do anything-->
 	<!-- <div id="droppable9" class="ui-widget-header drop"><p>Drop me here</p></div> -->
 	<!-- this droppable tile serves as the board rack -->
-	<div id="droppable8" class="ui-widget-header valid">
-	</div>
+	<div id="droppable8" class="ui-widget-header valid"></div>
 	<button id="reset">Start Over</button>
 	<button id="submit">Submit Word</button>
-</div> 
-<!-- end wrapper -->
 	<div id="test">
-		<p id="demo">test:</p>
-		 <p id="demo2">test:</p>
-		 <p id="demo3">test:</p>
-		 <p id="demo4">test:</p>
-		 <p id="demo5">the drop target is:</p>
 		 <p id="demo6">Current Score is: 0</p>
 		 <p id="demo7">Total Score is: 0</p>
-		 <p id="demo8">uuuuuu</p>
-		 </div>
+		 <p id="demo8"></p>
+	 </div>
 <script	
 	  src="https://code.jquery.com/jquery-3.4.1.min.js"
 	  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="

@@ -161,7 +161,6 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 	document.getElementById("submit").addEventListener("click", pressedSubmit);
 	// return pieces back to the rack and get new pieces
 	function startOver() {
-		document.getElementById("demo").innerHTML = Date();
 		setPieces();
 		resetScore();
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
@@ -179,11 +178,10 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 		}		
 		totalScore = 0;
 		document.getElementById("demo7").innerHTML = "Total Score is: " + totalScore;
+		document.getElementById("demo8").innerHTML = "";
 	}
 	function pressedSubmit() {
-		var sum =0;
-		document.getElementById("demo").innerHTML = Date();
-		
+		var sum = 0;
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
 		$('.board').droppable('option', 'disabled', false);
 		for(var index = 0; index < 26; index++)
@@ -209,6 +207,7 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 				tile[i].value = data.pieces[gotRandom].value;
 			}
 		}
+		//reseting position of tiles onto the rack
 		 $(".ui-widget-content" ).each(function( index, element ) {
 			// element == this
 			var spacingFactor = 130;
@@ -294,24 +293,6 @@ $( function() {
 			}
 			tile[index].previousDropped = tile[index].droppedOn;
 			document.getElementById('demo6').innerHTML = "Current score is: " + score;
-			
-
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 	});
 	// accept classes: board and rack except for current board, or only board because the tile is on the rack
@@ -353,18 +334,10 @@ $( function() {
 			var id = ui.draggable.attr("id");
 			var letterLookup = tile[tile.findIndex(tile => tile.id == id)].letter;
 			//resetScore(false, data[data.findIndex(data => data.pieces == letterLookup)].value);
-			document.getElementById('demo').innerHTML = id; 
-			document.getElementById('demo2').innerHTML = "the letter associated with the id: " + letterLookup;
 			// trying to get the index of the the last draggable that dropped using findIndex https://stackoverflow.com/questions/12462318/find-a-value-in-an-array-of-objects-in-javascript
-			document.getElementById('demo3').innerHTML ="what is this" +  ui.helper.attr("id");
-			document.getElementById('demo4').innerHTML = "test of position top: " + ui.position.top;
 			var id = ui.draggable.attr("id");
 			var index = tile.findIndex(tile => tile.id == id);
 			var letterLookup = tile[index].letter;
-			
-			
-			//$( "#"+ id ).draggable( "option", "scope", "placeOnRackOnly" );
-			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
 			
 		

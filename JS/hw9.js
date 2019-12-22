@@ -373,7 +373,8 @@ function movedFromTiletoRack(index, previous)
 			case "droppable": 
 			{
 				// moved from the double word score tile to another tile i think it works
-
+				score = score/2;
+				score = score -tile[index].value;
 			}
 			break;
 			case "droppable5":
@@ -413,16 +414,19 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 				{
 					case "droppable7":
 					{
+						score = score/2;
 						score = score + tile[index].value;
 					}
 					break;
-					case "droppable7":
+					case "droppable5":
 					{
-						
+						score = score/2;
+						score = score + tile[index].value;
 					}
 					break;
 					default:
 					{
+						score = score/2;
 						// moved to a regular tile
 						//score = score - tile[index].value;
 					}
@@ -442,7 +446,7 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable":
 					{
-						
+						score = score * 2;
 					}
 					break;
 					default:
@@ -468,7 +472,8 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable":
 					{
-						
+						score = score - tile[index].value;
+						score = score * 2;
 					}
 					break;
 					default:
@@ -491,7 +496,7 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable":
 					{
-						
+						score = score * 2;
 					}
 					break;
 					case "droppable5":

@@ -69,12 +69,16 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 	function randomizeLetters() 
 	{
 		var x = Math.floor(Math.random()*26);
-		if(amountArr[x] == 0)
+		if(amountArr[x] >= 1)
 		{
-			randomizeLetters();
+			amountArr[x] = amountArr[x] - 1;
+			return x;
+			
 		}
-		amountArr[x] = amountArr[x] - 1;
-		return x;
+			console.log("im printing: " + x);
+			randomizeLetters();
+			return x;
+		
 	}
 	//get top of tile rack for spacing of board pieces
 	var pos = $("#droppable8").position(); 
@@ -167,13 +171,33 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 		{
 			tile[index].previousDropped = "droppable8";
 		}
+		//reset pool of tiles
+		for(var i = 0; i < 26; i++)
+		{
+			amountArr[i] = data.pieces[i].amount;
+			//testingAmt = testingAmt + " " +  amountArr[i];
+		}		
+		totalScore = 0;
+		document.getElementById("demo7").innerHTML = "Total Score is: " + totalScore;
 	}
 	function pressedSubmit() {
+		var sum =0;
 		document.getElementById("demo").innerHTML = Date();
 		
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
 		$('.board').droppable('option', 'disabled', false);
-		
+		for(var index = 0; index < 26; index++)
+		{
+			console.log("letter: " + data.pieces[index].letter + " amount: " + amountArr[index]);
+			sum = sum + amountArr[index];
+			
+		}
+		if(sum <= 7) 
+		{
+			document.getElementById("demo8").innerHTML = "You have run out of letters!"
+			$( "#reset" ).trigger( "click" );
+			return;
+		}
 		for(var i = 0; i < rackSize; i++)
 		{
 			if(tile[i].droppedOn != "droppable8")
@@ -181,6 +205,8 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 				var gotRandom = randomizeLetters();
 				var letter = data.pieces[gotRandom].letter;
 				$("#" + tile[i].id).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + letter + ".jpg");
+				tile[i].letter = data.pieces[gotRandom].letter;
+				tile[i].value = data.pieces[gotRandom].value;
 			}
 		}
 		 $(".ui-widget-content" ).each(function( index, element ) {
@@ -193,15 +219,21 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 			$( element ).css( "top", String(pos.top + topOffset) + "px" );
 			});
 
-		totalScore = score;
-		document.getElementById("demo6").innerHTML = "Total Score is: " + totalScore;
+		totalScore = totalScore + score;
+		document.getElementById("demo7").innerHTML = "Total Score is: " + totalScore;
 		wordFlag = 0;
 		for(var index = 0; index < tile.length; index++)
 		{
 			tile[index].previousDropped = "droppable8";
 			tile[index].droppedOn = "droppable8";
 		}
-	
+		for(var index = 0; index < 26; index++)
+		{
+			console.log("letter: " + data.pieces[index].letter + " amount: " + amountArr[index]);
+		}
+		document.getElementById("demo8").innerHTML = "remaining letters: " + sum;
+		score = 0;
+		document.getElementById('demo6').innerHTML = "current score is: " + score;
 	}
 	
 	
@@ -246,8 +278,8 @@ $( function() {
 			
         var x  = tile[index].droppedOn;
 		//$('#' + x).droppable('option', 'disabled', true);
-		console.log("dropped onto:" + x);
-		console.log("previous is:" + tile[index].previousDropped);
+		//console.log("dropped onto:" + x);
+		//console.log("previous is:" + tile[index].previousDropped);
 
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
 			
@@ -261,7 +293,7 @@ $( function() {
 				movedFromTiletoRack(index, tile[index].previousDropped);
 			}
 			tile[index].previousDropped = tile[index].droppedOn;
-			document.getElementById('demo6').innerHTML = "place score here: " + score;
+			document.getElementById('demo6').innerHTML = "Current score is: " + score;
 			
 
 			
@@ -338,28 +370,28 @@ $( function() {
 		
         var x  = tile[index].droppedOn;
 		//$('#' + x).droppable('option', 'disabled', true);
-		console.log("dropped onto:" + x);
-		console.log("previous is:" + tile[index].previousDropped);
+		//console.log("dropped onto:" + x);
+		//console.log("previous is:" + tile[index].previousDropped);
 	
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
 			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
 			
 			//moved from rack to tile
-			console.log("UUUUUU we get here");
+			//console.log("UUUUUU we get here");
 			if(tile[index].previousDropped == "droppable8")
 			{
-				console.log("why we get here");
+				//console.log("why we get here");
 				movedFromRacktoTile(index, tile[index].droppedOn );
 				
 			}
 			// moved from one board slot to another
 			else
 			{
-				console.log("maybe we get here");
+				//console.log("maybe we get here");
 				movedtoAnotherBoardSlot(index, tile[index].previousDropped, tile[index].droppedOn );
 			}
 	
-			document.getElementById('demo6').innerHTML = "place score here: " + score;
+			document.getElementById('demo6').innerHTML = "current score is: " + score;
 			tile[index].previousDropped = tile[index].droppedOn;	
 			
 			
@@ -388,7 +420,7 @@ function movedFromTiletoRack(index, previous)
 			case "droppable5":
 			{
 				//wordFlagCheck(tile[index].droppedOn, index);
-				console.log("what is wordflag: " + wordFlag);
+				//console.log("what is wordflag: " + wordFlag);
 				if(wordFlag)
 				{
 					score = score/2;

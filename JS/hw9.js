@@ -7,7 +7,7 @@ Purpose of this webpage: implementing part of the scrabble game using jquery ui 
 const rackSize = 7;
 var score = 0;
 var board = []
-var doubleFlag;
+var wordFlag;
 var tile = []; // the current set of letters ex. A, B, F ...
 
 const data = {"pieces": [
@@ -120,6 +120,7 @@ function makeBoard(id, letter){
 			$( element ).css( "left", String(pos.left  + leftOffset + (spacingFactor * index)) + "px" );
 			$( element ).css( "top", String(pos.top + topOffset) + "px" );
 			$(element).attr("src","resource/Scrabble_Tiles/Scrabble_Tile_" + letter + ".jpg");
+			wordFlag = 0;
 		});
 	}
 	
@@ -131,6 +132,7 @@ function makeBoard(id, letter){
 		$("#reset").css("left", topOffset + "px");
 		$("#reset").css("color", "red");
 		score = 0;
+		wordFlag = 0;
 	}
 	/* move the reset button to a place beside reset button */
 	$("#submit")
@@ -140,6 +142,7 @@ function makeBoard(id, letter){
 		$("#submit").css("left", topOffset + 100 + "px");
 		$("#submit").css("color", "red");
 		score = 0;
+		wordFlag = 0;
 	}
 	//bind the button to a function startover
 	document.getElementById("reset").addEventListener("click", startOver);
@@ -149,7 +152,7 @@ function makeBoard(id, letter){
 		document.getElementById("demo").innerHTML = Date();
 		randomizeLetters();
 		setPieces();
-		updateScore(0, 0);
+		resetScore();
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
 		$('.board').droppable('option', 'disabled', false);
 		var index;
@@ -162,7 +165,7 @@ function makeBoard(id, letter){
 		document.getElementById("demo").innerHTML = Date();
 		randomizeLetters();
 		setPieces();
-		updateScore(0, 0);
+		resetScore();
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
 		$('.board').droppable('option', 'disabled', false);
 	}
@@ -283,7 +286,7 @@ $( function() {
 			/* https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
 			var id = ui.draggable.attr("id");
 			var letterLookup = tile[tile.findIndex(tile => tile.id == id)].letter;
-			//updateScore(false, data[data.findIndex(data => data.pieces == letterLookup)].value);
+			//resetScore(false, data[data.findIndex(data => data.pieces == letterLookup)].value);
 			document.getElementById('demo').innerHTML = id; 
 			document.getElementById('demo2').innerHTML = "the letter associated with the id: " + letterLookup;
 			// trying to get the index of the the last draggable that dropped using findIndex https://stackoverflow.com/questions/12462318/find-a-value-in-an-array-of-objects-in-javascript
@@ -324,45 +327,15 @@ $( function() {
 	
 			document.getElementById('demo6').innerHTML = "place score here: " + score;
 			tile[index].previousDropped = tile[index].droppedOn;	
-
+			
 			
 
 		}
 	});
 });
-function updateScore(code, val) 
+function resetScore() 
 {
-	switch(code){
-		case -1:
-		{
-			console.log("yo");
-			// moved from board to board
-			if(doubleFlag == -1)
-			{
-				console.log("hellO");
-				score = score 
-				doubleFlag = 0;
-				return;
-			}
-			score = score - val;
-		} 
-		break;
-		case 1:
-		{
-			score = score + val;
-			if(doubleFlag)
-			{
-				score = score *2;
-				doubleFlag = 0;
-			}
-			
-		}
-		break;
-		case 0:
-		{
-			score = 0;
-		}
-	}
+		score = 0;
 }
 
 
@@ -375,12 +348,23 @@ function movedFromTiletoRack(index, previous)
 				// moved from the double word score tile to another tile i think it works
 				score = score/2;
 				score = score -tile[index].value;
+				wordFlag = 0;
 			}
 			break;
 			case "droppable5":
 			{
+				//wordFlagCheck(tile[index].droppedOn, index);
+				console.log("what is wordflag: " + wordFlag);
+				if(wordFlag)
+				{
+					score = score/2;
+				}
 				score = score - 2*tile[index].value;
-
+				if(wordFlag)
+				{
+					score = score*2;
+				}
+				
 				
 			}
 			break;
@@ -394,8 +378,9 @@ function movedFromTiletoRack(index, previous)
 			default:
 			{
 				//move to rack from a  regular slot 
+				wordFlagCheckBegin();
 				score = score - tile[index].value;
-				
+				wordFlagCheckEnd();
 			}	
 		}
 	
@@ -409,26 +394,27 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 			case "droppable": 
 			{
 				// moved from the double word score tile to another tile i think it works
-				console.log("did we get here");
 				switch(newlyDropped)
 				{
 					case "droppable7":
 					{
 						score = score/2;
 						score = score + tile[index].value;
+						wordFlag = 0;
 					}
 					break;
 					case "droppable5":
 					{
 						score = score/2;
 						score = score + tile[index].value;
+						wordFlag = 0
 					}
 					break;
 					default:
 					{
 						score = score/2;
+						wordFlag = 0;
 						// moved to a regular tile
-						//score = score - tile[index].value;
 					}
 				}
 			}
@@ -436,27 +422,27 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 			case "droppable5":
 			{
 
-				score = score - tile[index].value;
+				
 				switch(newlyDropped)
 				{
 					case "droppable7":
 					{
-						score = score + tile[index].value;
+						
 					}
 					break;
 					case "droppable":
 					{
-						score = score * 2;
+						wordFlag = 1;
 					}
 					break;
 					default:
 					{
 						// moved to a regular tile
-						//score = score - tile[index].value;
+						wordFlagCheckBegin();
+						score = score - tile[index].value;
+						wordFlagCheckEnd();
 					}
 				}
-
-				
 			}
 			break;
 			case "droppable7":
@@ -472,14 +458,15 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable":
 					{
-						score = score - tile[index].value;
-						score = score * 2;
+						wordFlag = 1;
 					}
 					break;
 					default:
 					{
 						// moved to a regular tile
+						wordFlagCheckBegin();
 						score = score - tile[index].value;
+						wordFlagCheckEnd();
 					}
 				}
 			}
@@ -491,7 +478,9 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 				{
 					case "droppable7":
 					{
+						wordFlagCheckBegin();
 						score = score + tile[index].value;
+						wordFlagCheckEnd();
 					}
 					break;
 					case "droppable":
@@ -501,7 +490,9 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable5":
 					{
+						wordFlagCheckBegin();
 						score = score + tile[index].value;
+						wordFlagCheckEnd();
 					}
 					break;
 					default:
@@ -523,21 +514,28 @@ function movedFromRacktoTile(index, newlyDropped)
 				{
 					score = score + tile[index].value;
 					score = score + score;
+					wordFlag = 1;
 				}
 				break;
 				case "droppable5":
 				{
+					wordFlagCheckBegin();
 					score = score + 2 * tile[index].value;
+					wordFlagCheckEnd();
 				}
 				break;
 				case "droppable7":
 				{
+					wordFlagCheckBegin();
 					score = score + 2 * tile[index].value;
+					wordFlagCheckEnd();
 				}
 				break;
 				default:
 				{
+					wordFlagCheckBegin();
 					score = score +  tile[index].value;
+					wordFlagCheckEnd();
 				}
 				
 			}	
@@ -545,7 +543,21 @@ function movedFromRacktoTile(index, newlyDropped)
 	
 	
 }
-
+function wordFlagCheckBegin()
+{
+	if(wordFlag)
+	{
+		score = score/2;
+	}
+}
+function wordFlagCheckEnd()
+{
+	if(wordFlag)
+	{
+		score = score*2;
+	}
+	
+}
 
 $(document).ready(function(){
 	randomizeLetters();

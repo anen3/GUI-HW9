@@ -364,15 +364,8 @@ function updateScore(code, val)
 		}
 	}
 }
-function updateScoreRackPrevious(code, val) 
-{
-	score = val + score;
-}
-function updateScoreBoardPrevious(code, val) 
-{
-	score =  score - val * 2;
-	
-}
+
+
 function movedFromTiletoRack(index, previous)
 {
 	switch(previous)
@@ -380,15 +373,11 @@ function movedFromTiletoRack(index, previous)
 			case "droppable": 
 			{
 				// moved from the double word score tile to another tile i think it works
-				doubleFlag = -1;
-				updateScoreBoardPrevious(-1, tile[index].value);
-				console.log("did we get here");
-				
+
 			}
 			break;
 			case "droppable5":
 			{
-				//updateScoreBoardPrevious(-1,   tile[index].value/2);
 				score = score - 2*tile[index].value;
 
 				
@@ -397,7 +386,7 @@ function movedFromTiletoRack(index, previous)
 			case "droppable7":
 			{
 				// moved from the double letter score tile to a tile (regular or special)?
-				//updateScoreBoardPrevious(-1,   tile[index].value/2);
+
 				score = score - 2*tile[index].value;
 			}
 			break;
@@ -419,8 +408,6 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 			case "droppable": 
 			{
 				// moved from the double word score tile to another tile i think it works
-				doubleFlag = -1;
-				updateScoreBoardPrevious(-1, tile[index].value);
 				console.log("did we get here");
 				switch(newlyDropped)
 				{
@@ -444,7 +431,7 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 			break;
 			case "droppable5":
 			{
-				//updateScoreBoardPrevious(-1,   tile[index].value/2);
+
 				score = score - tile[index].value;
 				switch(newlyDropped)
 				{
@@ -545,7 +532,7 @@ function movedFromRacktoTile(index, newlyDropped)
 				break;
 				default:
 				{
-					updateScoreRackPrevious(1,  tile[index].value);
+					score = score +  tile[index].value;
 				}
 				
 			}	

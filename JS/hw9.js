@@ -1,17 +1,15 @@
 /*Alex Nguyen
 alex_nguyen@student.uml.edu
+https://github.com/anen3/GUI-HW9
 UMass Lowell COMP4610 GUI Programming I
 Purpose of this webpage: implementing part of the scrabble game using jquery ui draggable and droppable*/
-
-
 const rackSize = 7;
 var score = 0;
 var amountArr = [];
-var refreshAmountArr = [];
 var wordFlag;
 var tile = []; // the current set of letters ex. A, B, F ...
 var totalScore = 0;
-var testingAmt;
+//couldn't get json to work so here is the data
 const data = {"pieces": [
 			{"letter":"A", "value":1,  "amount":9},
 			{"letter":"B", "value":3,  "amount":2},
@@ -46,7 +44,6 @@ const data = {"pieces": [
 	for(var i = 0; i < 26; i++)
 	{
 		amountArr[i] = data.pieces[i].amount;
-		//testingAmt = testingAmt + " " +  amountArr[i];
 	}		
 	
 function makeTile(id, letter, value, droppedOn, previousDropped) {
@@ -57,15 +54,7 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
   this.previousDropped = previousDropped;
 } 
 
-
-//initialize board
-//for(int i = 0; i < rackSize; i++)
-
-
-
-    
-	//get the rackSize amount of random letters
-	//returns a random letter
+	//returns a random letter index. if the pool does not contain that letter anymore, go back and get another one.
 	function randomizeLetters() 
 	{
 		var x = Math.floor(Math.random()*26);
@@ -75,19 +64,19 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 			return x;
 			
 		}
-			console.log("im printing: " + x);
 			randomizeLetters();
 			return x;
 		
 	}
 	//get top of tile rack for spacing of board pieces
 	var pos = $("#droppable8").position(); 
-	 // initial spacing of the board spaces
+	
+	 // initial spacing of the board spaces and load their images
 	$( ".board" ).each(function( index, element ) {
 		// element == this
 		var spacingFactor = 170;
 		$( element ).css( "left", String(pos.left + spacingFactor * index) + "px" );
-	if( $( this ).is(  "#droppable5" ) ) {
+		if( $( this ).is(  "#droppable5" ) ) {
 			$(element).attr("src","resource/Scrabble_Tiles/double-letter-score.png");
 		}
 		else if ( $( this ).is( "#droppable" ) ) {
@@ -100,24 +89,8 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 		{
 			$(element).attr("src","resource/Scrabble_Tiles/regular-board.png");
 		}
-		// stop spacing elements here so the rack does not get affected?
-		
-		
-		
-		
-		
+
 	});
-		// the tile underneath the board
-	/* $( ".drop" ).each(function( index, element ) {
-			// element == this
-			var spacingFactor = 170;
-			$(element).find("p").html("why is it not working");
-			var posTileEnd = $("#droppable7").position().left; 
-			$( element ).css( "zIndex", "-1");
-			$( element ).css( "width", String(posTileEnd + $("#droppable7").width()) + "px");
-		}); */
-	
-	
 	// function to space out the tile pieces, and load the tile image 
 	function setPieces(){
 	   $(".ui-widget-content" ).each(function( index, element ) {
@@ -161,10 +134,10 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 	document.getElementById("submit").addEventListener("click", pressedSubmit);
 	// return pieces back to the rack and get new pieces
 	function startOver() {
-		setPieces();
+		setPieces(); // move the pieces to the rack
 		resetScore();
 		document.getElementById("demo6").innerHTML = "place score here: " + score;
-		$('.board').droppable('option', 'disabled', false);
+		$('.board').droppable('option', 'disabled', false); // enable all board slots
 		var index;
 		for(index = 0; index < tile.length; index++)
 		{
@@ -174,7 +147,6 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 		for(var i = 0; i < 26; i++)
 		{
 			amountArr[i] = data.pieces[i].amount;
-			//testingAmt = testingAmt + " " +  amountArr[i];
 		}		
 		totalScore = 0;
 		document.getElementById("demo7").innerHTML = "Total Score is: " + totalScore;
@@ -238,6 +210,7 @@ function makeTile(id, letter, value, droppedOn, previousDropped) {
 	
 	//set draggable property for the piece tiles, make the board tiles detect the piece tiles with img tag
 $( function() {
+	// keep tiles from being dropping again on its same board space
     $( "#draggable" ).draggable({ revert: "invalid" });
     $( "#draggable2" ).draggable({ revert: "invalid" });
     $( "#draggable3" ).draggable({ revert: "invalid" });
@@ -245,17 +218,7 @@ $( function() {
 	$( "#draggable5" ).draggable({ revert: "invalid" });
 	$( "#draggable6" ).draggable({ revert: "invalid" });
 	$( "#draggable7" ).draggable({ revert: "invalid" });
-	//initializing the scope of tiles and board and rack
-	/* $( ".ui-widget-content" ).draggable({
-		scope: "placeOnBoardOnly"
-		});
-	$( "#droppable8" ).droppable({
-		  scope: "placeOnRackOnly"
-		});
-	$( ".board" ).droppable({
-	  scope: "placeOnBoardOnly"
-	}); */
-	//do not count trigger the drop event for droppable 8 for scoring reason
+	//the rack function for when a tile is dropped onto it. update the score if a tile is moved from the board to the rack, otherwise do not change the score.
 	$("#droppable8").droppable({
 	 classes: {
         "ui-droppable-active": "ui-state-active",
@@ -263,26 +226,12 @@ $( function() {
       },
 	  drop: function( event, ui ) 
 		{
-			
 			var id = ui.draggable.attr("id");
 			var index = tile.findIndex(tile => tile.id == id);
 			var letterLookup = tile[index].letter;
-			document.getElementById("demo5").innerHTML = "the drop target is:" +  this.id;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
-			
-			
-			//$( "#"+ id ).draggable( "option", "scope", "placeOnBoardOnly" );
-			
-			
-			
-        var x  = tile[index].droppedOn;
-		//$('#' + x).droppable('option', 'disabled', true);
-		//console.log("dropped onto:" + x);
-		//console.log("previous is:" + tile[index].previousDropped);
-
+			var x  = tile[index].droppedOn;
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
-			
-
 			if(tile[index].previousDropped == "droppable8")
 			{
 				//moving a tile originally on the rack to another spot on the rack
@@ -295,26 +244,8 @@ $( function() {
 			document.getElementById('demo6').innerHTML = "Current score is: " + score;
 		}
 	});
-	// accept classes: board and rack except for current board, or only board because the tile is on the rack
-	$('.ui-widget-content').draggable({
-    start: function() {
-		/* var x = tile[tile.findIndex(tile => tile.id == this.id) ].droppedOn;
-		console.log("picked up from:" + x);
-		tile[tile.findIndex(tile => tile.id == this.id) ].previousDropped = x;
-        if( x == "droppable8")
-			{console.log("the rack");}
-		else
-		{
-			
-			$('#' + x).droppable('option', 'disabled', true);
-		} */
-		//$( '#' + x).removeClass( "valid" )
-    },
-    stop: function() {
-		
-    }
-});
 	//underlapped droppable should be hidden under board tiles functions out and drop
+	//droppable code following from the tutorial: https://jqueryui.com/droppable/#revert*/
     $( ".board" ).droppable({
 		classes: 
 		{
@@ -324,43 +255,30 @@ $( function() {
 	  //jquery ui drop, not the css class
 		drop: function( event, ui ) 
 		{
-			$( this )
-			.addClass( "ui-state-highlight" )
-			.find( "p" )
-			.html( "Dropped!" )
-			
+			$( this ).addClass( "ui-state-highlight" )
+
 			/* get the id of draggable that was last dropped */
-			/* https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
+			/* VisioN's comment also it's in the documentation of droppable event: drop -> ui draggable https://stackoverflow.com/questions/10665901/jquery-droppable-get-draggable-id */
 			var id = ui.draggable.attr("id");
 			var letterLookup = tile[tile.findIndex(tile => tile.id == id)].letter;
-			//resetScore(false, data[data.findIndex(data => data.pieces == letterLookup)].value);
 			// trying to get the index of the the last draggable that dropped using findIndex https://stackoverflow.com/questions/12462318/find-a-value-in-an-array-of-objects-in-javascript
 			var id = ui.draggable.attr("id");
 			var index = tile.findIndex(tile => tile.id == id);
 			var letterLookup = tile[index].letter;
 			tile[tile.findIndex(tile => tile.id == id)].droppedOn = this.id; //give the tile the drop target id
-			
-		
-        var x  = tile[index].droppedOn;
-		//$('#' + x).droppable('option', 'disabled', true);
-		//console.log("dropped onto:" + x);
-		//console.log("previous is:" + tile[index].previousDropped);
-	
+			var x  = tile[index].droppedOn;
 			$('#' + tile[index].previousDropped).droppable('option', 'disabled', false);
 			$('#' + tile[index].droppedOn).droppable('option', 'disabled', true);
 			
 			//moved from rack to tile
-			//console.log("UUUUUU we get here");
 			if(tile[index].previousDropped == "droppable8")
 			{
-				//console.log("why we get here");
 				movedFromRacktoTile(index, tile[index].droppedOn );
 				
 			}
 			// moved from one board slot to another
 			else
 			{
-				//console.log("maybe we get here");
 				movedtoAnotherBoardSlot(index, tile[index].previousDropped, tile[index].droppedOn );
 			}
 	
@@ -384,7 +302,7 @@ function movedFromTiletoRack(index, previous)
 		{
 			case "droppable": 
 			{
-				// moved from the double word score tile to another tile i think it works
+				// moved from the double word score tile to rack
 				score = score/2;
 				score = score -tile[index].value;
 				wordFlag = 0;
@@ -392,8 +310,7 @@ function movedFromTiletoRack(index, previous)
 			break;
 			case "droppable5":
 			{
-				//wordFlagCheck(tile[index].droppedOn, index);
-				//console.log("what is wordflag: " + wordFlag);
+				// moved from the double letter score tile rack 
 				if(wordFlag)
 				{
 					score = score/2;
@@ -409,7 +326,7 @@ function movedFromTiletoRack(index, previous)
 			break;
 			case "droppable7":
 			{
-				// moved from the double letter score tile to a tile (regular or special)?
+				// moved from the double letter score tile rack 
 
 				score = score - 2*tile[index].value;
 			}
@@ -576,11 +493,7 @@ function movedFromRacktoTile(index, newlyDropped)
 					score = score +  tile[index].value;
 					wordFlagCheckEnd();
 				}
-				
 			}	
-
-	
-	
 }
 function wordFlagCheckBegin()
 {

@@ -305,22 +305,16 @@ function movedFromTiletoRack(index, previous)
 			{
 				// moved from the double word score tile to rack
 				score = score/2;
-				score = score -tile[index].value;
+				score = score - tile[index].value;
 				wordFlag = 0;
 			}
 			break;
 			case "droppable5":
 			{
 				// moved from the double letter score tile rack 
-				if(wordFlag)
-				{
-					score = score/2;
-				}
-				score = score - 2*tile[index].value;
-				if(wordFlag)
-				{
-					score = score*2;
-				}
+				wordFlagCheckBegin()
+				score = score - 2 * tile[index].value;
+				wordFlagCheckEnd();
 				
 				
 			}
@@ -328,8 +322,9 @@ function movedFromTiletoRack(index, previous)
 			case "droppable7":
 			{
 				// moved from the double letter score tile rack 
-
-				score = score - 2*tile[index].value;
+				wordFlagCheckBegin();
+				score = score - 2 * tile[index].value;
+				wordFlagCheckEnd();
 			}
 			break;
 			default:
@@ -350,26 +345,26 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 		{
 			case "droppable": 
 			{
-				// moved from the double word score tile to another tile i think it works
+				// moved from the double word score tile to another tile 
 				switch(newlyDropped)
 				{
 					case "droppable7":
 					{
-						score = score/2;
+						score = score / 2;
 						score = score + tile[index].value;
 						wordFlag = 0;
 					}
 					break;
 					case "droppable5":
 					{
-						score = score/2;
+						score = score / 2;
 						score = score + tile[index].value;
 						wordFlag = 0
 					}
 					break;
 					default:
 					{
-						score = score/2;
+						score = score / 2;
 						wordFlag = 0;
 						// moved to a regular tile
 					}
@@ -389,7 +384,9 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable":
 					{
+						score = score - tile[index].value;
 						wordFlag = 1;
+						wordFlagCheckEnd();
 					}
 					break;
 					default:
@@ -415,7 +412,9 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					break;
 					case "droppable":
 					{
+						score = score - tile[index].value;
 						wordFlag = 1;
+						wordFlagCheckEnd();
 					}
 					break;
 					default:
@@ -443,6 +442,7 @@ function movedtoAnotherBoardSlot(index, previous, newlyDropped)
 					case "droppable":
 					{
 						score = score * 2;
+						wordFlag = 1;
 					}
 					break;
 					case "droppable5":
